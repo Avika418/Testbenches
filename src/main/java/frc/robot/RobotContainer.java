@@ -5,7 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Subsystem;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.SubsystemParent;
 
 import static edu.wpi.first.units.Units.Volt;
 
@@ -25,20 +28,35 @@ import frc.robot.util.Controller;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Flywheel m_Flywheel = new Flywheel();
+  private final SubsystemParent subsystem;
   public double volt = 0.0;
-
+  private final Subsystem subway = Subsystem.Flywheel; // CHANGE PER SUBSYSTEM
+  private final int motorID = 0;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Controller driverController = new Controller(0);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
+    switch (subway) {
+      case Flywheel:
+       subsystem = new Flywheel(motorID);
+        break;
+      case Elevator:
+      subsystem = new Elevator(motorID);
+        break;
+      default:
+        subsystem = null;
+        break;
+    }
     configureBindings();
   }
 
   
   private void configureBindings() {
-    driverController.triggerLeft().onTrue(m_Flywheel.setVelocityCommand(volt += 0.1));
+    driverController.triggerLeft().onTrue(subsystem.startCommand());
+  }
+
+  public void disabledInit(){
+    subsystem.stop();
   }
 
   /**
