@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Flywheel extends SubsystemBase {
+public class Flywheel extends SubsystemParent {
     private final TalonFX flyWheelMotor;
     private final TalonFXConfigurator flyWheelConfigurator;
 
@@ -32,8 +32,8 @@ public class Flywheel extends SubsystemBase {
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
     private final NeutralOut brakeRequest = new NeutralOut();
 
-    public Flywheel(){
-        flyWheelMotor = new TalonFX(0);
+    public Flywheel(int deviceID){
+        flyWheelMotor = new TalonFX(deviceID);
         flyWheelConfigurator = flyWheelMotor.getConfigurator();
         velocityRequest.Slot = 0;
         motorConfigs = new TalonFXConfiguration();
@@ -74,6 +74,10 @@ public class Flywheel extends SubsystemBase {
         flyWheelMotor.setVoltage(desiredVoltage);
     }
 
+    public Command startCommand() {
+        return null;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         
@@ -107,6 +111,12 @@ public class Flywheel extends SubsystemBase {
 
     public Command setVoltageCommand(double voltage){
         return Commands.runOnce(() -> setVoltage(voltage));
+    }
+
+    @Override
+    public void stop() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }
 
 
